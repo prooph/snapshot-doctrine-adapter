@@ -40,7 +40,7 @@ final class SnapshotStoreSchema
 
         $snapshot->addIndex(['aggregate_type', 'aggregate_id']);
     }
-    
+
     /**
      * Drop a stream schema
      *

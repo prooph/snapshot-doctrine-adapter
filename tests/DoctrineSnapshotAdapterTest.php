@@ -52,15 +52,15 @@ final class DoctrineSnapshotAdapterTest extends TestCase
     public function it_adds_and_reads()
     {
         $schema = new Schema();
-        
+
         SnapshotStoreSchema::create($schema, 'foo_snapshot');
-        
+
         foreach ($schema->toSql($this->connection->getDatabasePlatform()) as $sql) {
             $this->connection->executeQuery($sql);
         }
-        
+
         $adapter = new DoctrineSnapshotAdapter($this->connection);
-        
+
         $aggregateType = AggregateType::fromString('foo');
 
         $aggregateRoot = new \stdClass();
