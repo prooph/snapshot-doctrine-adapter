@@ -112,7 +112,7 @@ final class DoctrineSnapshotAdapter implements Adapter
     }
 
     /**
-     * Get table name for given stream name
+     * Get table name for given aggregate type
      *
      * @param AggregateType $aggregateType
      * @return string

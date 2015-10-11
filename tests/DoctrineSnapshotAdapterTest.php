@@ -9,7 +9,7 @@
  * Date: 10/10/15 - 15:37
  */
 
-namespace ProophTest\EventStore\Adpater\MongoDb;
+namespace ProophTest\EventStore\Snapshot\Adapter\Doctrine;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
@@ -17,11 +17,12 @@ use Doctrine\DBAL\Schema\Schema;
 use PHPUnit_Framework_TestCase as TestCase;
 use Prooph\EventStore\Aggregate\AggregateType;
 use Prooph\EventStore\Snapshot\Adapter\Doctrine\DoctrineSnapshotAdapter;
+use Prooph\EventStore\Snapshot\Adapter\Doctrine\Schema\SnapshotStoreSchema;
 use Prooph\EventStore\Snapshot\Snapshot;
 
 /**
- * Class MongoDbAdapterTest
- * @package ProophTest\EventStore\Adpater\Doctrine
+ * Class DoctrineSnapshotAdapterTest
+ * @package ProophTest\EventStore\Snapshot\Adapter\Doctrine
  */
 final class DoctrineSnapshotAdapterTest extends TestCase
 {
@@ -43,22 +44,6 @@ final class DoctrineSnapshotAdapterTest extends TestCase
         ];
 
         $this->connection = DriverManager::getConnection($connection);
-
-        $schema = new Schema();
-        $table = $schema->createTable('foo_snapshot');
-        $table->addColumn('aggregate_type', 'string');
-        $table->addColumn('aggregate_id', 'string');
-        $table->addColumn('last_version', 'integer');
-        $table->addColumn('created_at', 'string');
-        $table->addColumn('aggregate_root', 'blob');
-
-        $sqls = $schema->toSql($this->connection->getDatabasePlatform());
-
-        foreach ($sqls as $sql) {
-            $this->connection->executeQuery($sql);
-        }
-
-        $this->adapter = new DoctrineSnapshotAdapter($this->connection);
     }
 
     /**
@@ -66,6 +51,16 @@ final class DoctrineSnapshotAdapterTest extends TestCase
      */
     public function it_adds_and_reads()
     {
+        $schema = new Schema();
+        
+        SnapshotStoreSchema::create($schema, 'foo_snapshot');
+        
+        foreach ($schema->toSql($this->connection->getDatabasePlatform()) as $sql) {
+            $this->connection->executeQuery($sql);
+        }
+        
+        $adapter = new DoctrineSnapshotAdapter($this->connection);
+        
         $aggregateType = AggregateType::fromString('foo');
 
         $aggregateRoot = new \stdClass();
@@ -79,11 +74,11 @@ final class DoctrineSnapshotAdapterTest extends TestCase
 
         $snapshot = new Snapshot($aggregateType, 'id', $aggregateRoot, 1, $now);
 
-        $this->adapter->add($snapshot);
+        $adapter->add($snapshot);
 
-        $this->assertNull($this->adapter->get($aggregateType, 'invalid'));
+        $this->assertNull($adapter->get($aggregateType, 'invalid'));
 
-        $readSnapshot = $this->adapter->get($aggregateType, 'id');
+        $readSnapshot = $adapter->get($aggregateType, 'id');
 
         $this->assertEquals($snapshot, $readSnapshot);
     }
@@ -94,25 +89,14 @@ final class DoctrineSnapshotAdapterTest extends TestCase
     public function it_uses_custom_snapshot_table_map()
     {
         $schema = new Schema();
-        $table = $schema->createTable('bar');
-        $table->addColumn('aggregate_type', 'string');
-        $table->addColumn('aggregate_id', 'string');
-        $table->addColumn('last_version', 'integer');
-        $table->addColumn('created_at', 'string');
-        $table->addColumn('aggregate_root', 'blob');
 
-        $sqls = $schema->toSql($this->connection->getDatabasePlatform());
+        SnapshotStoreSchema::create($schema, 'bar');
 
-        foreach ($sqls as $sql) {
+        foreach ($schema->toSql($this->connection->getDatabasePlatform()) as $sql) {
             $this->connection->executeQuery($sql);
         }
 
-        $this->adapter = new DoctrineSnapshotAdapter(
-            $this->connection,
-            [
-                'foo' => 'bar'
-            ]
-        );
+        $adapter = new DoctrineSnapshotAdapter($this->connection, ['foo' => 'bar']);
 
         $aggregateType = AggregateType::fromString('foo');
 
@@ -127,7 +111,7 @@ final class DoctrineSnapshotAdapterTest extends TestCase
 
         $snapshot = new Snapshot($aggregateType, 'id', $aggregateRoot, 1, $now);
 
-        $this->adapter->add($snapshot);
+        $adapter->add($snapshot);
 
         $queryBuilder = $this->connection->createQueryBuilder();
         $queryBuilder
