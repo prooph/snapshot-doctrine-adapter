@@ -10,13 +10,12 @@ matrix:
     - php: 7
 
 env:
-  - DOCTRINE_VERSION=2.4.* ES_VERSION=dev-master
-  - DOCTRINE_VERSION=^2.5 ES_VERSION=dev-master
+  - DOCTRINE_VERSION=2.4.*
+  - DOCTRINE_VERSION=^2.5
 
 before_script:
   - composer self-update
   - composer require doctrine/dbal:${DOCTRINE_VERSION} --dev --prefer-source
-  - composer require prooph/event-store:${ES_VERSION} --dev --prefer-source
   - composer install --prefer-source
 
 script:
