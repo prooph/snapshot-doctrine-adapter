@@ -1,2 +1,2 @@
-# snapshot-doctrine-adapter
+# snapshot-mongodb-adapter
 Doctrine Adapter for the Snapshot Store
