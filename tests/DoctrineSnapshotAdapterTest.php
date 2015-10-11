@@ -116,7 +116,7 @@ final class DoctrineSnapshotAdapterTest extends TestCase
         $queryBuilder = $this->connection->createQueryBuilder();
         $queryBuilder
             ->select('*')
-            ->from('bar')
+            ->from('bar', 'bar')
             ->setMaxResults(1);
 
         $stmt = $queryBuilder->execute();
