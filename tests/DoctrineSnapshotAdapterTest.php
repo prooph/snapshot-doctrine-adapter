@@ -91,7 +91,7 @@ final class DoctrineSnapshotAdapterTest extends TestCase
     /**
      * @test
      */
-    public function it_uses_custom_snapshot_grid_fs_map_and_write_concern()
+    public function it_uses_custom_snapshot_table_map()
     {
         $schema = new Schema();
         $table = $schema->createTable('bar');
