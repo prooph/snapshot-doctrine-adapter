@@ -1,0 +1,42 @@
+{
+    "name": "prooph/snapshot-doctrine-adapter",
+    "description": "Snapshot Doctrine Adapter for ProophEventStore",
+    "homepage": "https://github.com/prooph/snapshot-doctrine-adapter",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Alexander Miertsch",
+            "email": "contact@prooph.de",
+            "homepage": "http://www.prooph.de"
+        },
+        {
+            "name": "Sascha-Oliver Prolic",
+            "email": "saschaprolic@googlemail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5",
+        "prooph/event-store": "dev-develop",
+        "prooph/common": "^3.5",
+        "doctrine/dbal": "^2.4"
+    },
+    "require-dev": {
+        "container-interop/container-interop": "^1.1",
+        "phpunit/phpunit": "4.8.*",
+        "fabpot/php-cs-fixer": "1.7.*",
+        "satooshi/php-coveralls": "dev-master"
+    },
+    "suggest": {
+        "container-interop/container-interop": "For usage of provided factories"
+    },
+    "autoload": {
+        "psr-4": {
+            "Prooph\\EventStore\\Snapshot\\Adapter\\Doctrine\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ProophTest\\EventStore\\Snapshot\\Adapter\\Doctrine\\": "tests/"
+        }
+    }
+}
