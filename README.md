@@ -6,6 +6,10 @@ Doctrine Adapter for the Snapshot Store
 [![Coverage Status](https://coveralls.io/repos/prooph/snapshot-doctrine-adapter/badge.svg?branch=master&service=github)](https://coveralls.io/github/prooph/snapshot-doctrine-adapter?branch=master)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/prooph/improoph)
 
+# Set Up
+
+How to use the adapter is explained in the [prooph/event-store  docs](https://github.com/prooph/event-store/blob/master/docs/snapshots.md). To help you with setting up the snapshot tables we ship a [SnapshotStoreSchema](src/Schema/SnapshotStoreSchema.php) helper with the package. You can use it in a doctrine migrations script or manually by passing in a `Doctrine\DBAL\Schema\Schema` and executing the generated SQL afterwards.
+
 # Support
 
 - Ask questions on [prooph-users](https://groups.google.com/forum/?hl=de#!forum/prooph) mailing list.
