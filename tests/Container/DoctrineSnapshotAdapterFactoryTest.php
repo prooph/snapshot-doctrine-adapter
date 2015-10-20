@@ -129,7 +129,7 @@ final class DoctrineSnapshotAdapterFactoryTest extends TestCase
     /**
      * @test
      * @expectedException \Prooph\EventStore\Exception\ConfigurationException
-     * @expectedExceptionMessage [Configuration Error] Snapshot adapter options must contain connection alias or configuration array
+     * @expectedExceptionMessage [Configuration Error] Prooph\EventStore\Snapshot\Adapter\Doctrine\Container\DoctrineSnapshotAdapterFactory was not able to locate or create a valid Doctrine\DBAL\Connection
      */
     public function it_throws_exception_when_no_connection_found()
     {

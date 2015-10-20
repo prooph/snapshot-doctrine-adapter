@@ -59,9 +59,10 @@ final class DoctrineSnapshotAdapterFactory implements RequiresContainerId
         }
 
         if (!isset($connection)) {
-            throw ConfigurationException::configurationError(
-                'Snapshot adapter options must contain connection alias or configuration array'
-            );
+            throw ConfigurationException::configurationError(sprintf(
+                '%s was not able to locate or create a valid Doctrine\DBAL\Connection',
+                __CLASS__
+            ));
         }
 
         $snapshotTableMap = isset($adapterOptions['snapshot_table_map'])
