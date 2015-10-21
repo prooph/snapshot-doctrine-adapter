@@ -13,7 +13,9 @@ namespace Prooph\EventStore\Snapshot\Adapter\Doctrine\Container;
 
 use Doctrine\DBAL\DriverManager;
 use Interop\Config\ConfigurationTrait;
-use Interop\Config\RequiresContainerId;
+use Interop\Config\ProvidesDefaultOptions;
+use Interop\Config\RequiresConfig;
+use Interop\Config\RequiresMandatoryOptions;
 use Interop\Container\ContainerInterface;
 use Prooph\EventStore\Exception\ConfigurationException;
 use Prooph\EventStore\Snapshot\Adapter\Doctrine\DoctrineSnapshotAdapter;
@@ -22,7 +24,7 @@ use Prooph\EventStore\Snapshot\Adapter\Doctrine\DoctrineSnapshotAdapter;
  * Class DoctrineSnapshotAdapterFactory
  * @package Prooph\EventStore\Snapshot\Adapter\Doctrine\Container
  */
-final class DoctrineSnapshotAdapterFactory implements RequiresContainerId
+final class DoctrineSnapshotAdapterFactory implements RequiresConfig, RequiresMandatoryOptions, ProvidesDefaultOptions
 {
     use ConfigurationTrait;
 
@@ -33,29 +35,12 @@ final class DoctrineSnapshotAdapterFactory implements RequiresContainerId
     public function __invoke(ContainerInterface $container)
     {
         $config = $container->get('config');
+        $config = $this->options($config)['snapshot_adapter']['options'];
 
-        $snapshotAdapterConfig = $this->optionsWithFallback($config);
-
-        if (!isset($snapshotAdapterConfig['options'])) {
-            throw ConfigurationException::configurationError(
-                'Snapshot adapter options missing'
-            );
-        }
-
-        if (!is_array($snapshotAdapterConfig['options'])
-            && !$snapshotAdapterConfig['options'] instanceof \ArrayAccess
-        ) {
-            throw ConfigurationException::configurationError(
-                'Snapshot adapter options must be an array or implement ArrayAccess'
-            );
-        }
-
-        $adapterOptions = $snapshotAdapterConfig['options'];
-
-        if (isset($adapterOptions['connection_alias']) && $container->has($adapterOptions['connection_alias'])) {
-            $connection = $container->get($adapterOptions['connection_alias']);
-        } elseif (isset($adapterOptions['connection']) && is_array($adapterOptions['connection'])) {
-            $connection = DriverManager::getConnection($adapterOptions['connection']);
+        if (isset($config['connection_alias']) && $container->has($config['connection_alias'])) {
+            $connection = $container->get($config['connection_alias']);
+        } elseif (isset($config['connection']) && is_array($config['connection'])) {
+            $connection = DriverManager::getConnection($config['connection']);
         }
 
         if (!isset($connection)) {
@@ -65,11 +50,7 @@ final class DoctrineSnapshotAdapterFactory implements RequiresContainerId
             ));
         }
 
-        $snapshotTableMap = isset($adapterOptions['snapshot_table_map'])
-            ? $adapterOptions['snapshot_table_map']
-            : [];
-
-        return new DoctrineSnapshotAdapter($connection, $snapshotTableMap);
+        return new DoctrineSnapshotAdapter($connection, $config['snapshot_table_map']);
     }
 
     /**
@@ -91,8 +72,16 @@ final class DoctrineSnapshotAdapterFactory implements RequiresContainerId
     /**
      * @inheritdoc
      */
-    public function containerId()
+    public function mandatoryOptions()
     {
-        return 'snapshot_adapter';
+        return ['snapshot_adapter' => ['options']];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function defaultOptions()
+    {
+        return ['snapshot_adapter' => ['options' => ['snapshot_table_map' => []]]];
     }
 }

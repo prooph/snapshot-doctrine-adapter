@@ -108,27 +108,6 @@ final class DoctrineSnapshotAdapterFactoryTest extends TestCase
     /**
      * @test
      * @expectedException \Prooph\EventStore\Exception\ConfigurationException
-     * @expectedExceptionMessage [Configuration Error] Snapshot adapter options missing
-     */
-    public function it_throws_exception_when_config_options_missing()
-    {
-        $container = $this->prophesize(ContainerInterface::class);
-        $container->get('config')->willReturn([
-            'prooph' => [
-                'event_store' => [
-                    'snapshot_adapter' => [
-                        'type' => DoctrineSnapshotAdapter::class
-                    ]
-                ]
-            ]
-        ]);
-        $factory = new DoctrineSnapshotAdapterFactory();
-        $factory($container->reveal());
-    }
-
-    /**
-     * @test
-     * @expectedException \Prooph\EventStore\Exception\ConfigurationException
      * @expectedExceptionMessage [Configuration Error] Prooph\EventStore\Snapshot\Adapter\Doctrine\Container\DoctrineSnapshotAdapterFactory was not able to locate or create a valid Doctrine\DBAL\Connection
      */
     public function it_throws_exception_when_no_connection_found()
@@ -141,28 +120,6 @@ final class DoctrineSnapshotAdapterFactoryTest extends TestCase
                         'type' => DoctrineSnapshotAdapter::class,
                         'options' => [
                         ]
-                    ]
-                ]
-            ]
-        ]);
-        $factory = new DoctrineSnapshotAdapterFactory();
-        $factory($container->reveal());
-    }
-
-    /**
-     * @test
-     * @expectedException \Prooph\EventStore\Exception\ConfigurationException
-     * @expectedExceptionMessage [Configuration Error] Snapshot adapter options must be an array or implement ArrayAccess
-     */
-    public function it_throws_exception_when_config_options_is_not_array_or_array_access()
-    {
-        $container = $this->prophesize(ContainerInterface::class);
-        $container->get('config')->willReturn([
-            'prooph' => [
-                'event_store' => [
-                    'snapshot_adapter' => [
-                        'type' => DoctrineSnapshotAdapter::class,
-                        'options' => new \stdClass(),
                     ]
                 ]
             ]
