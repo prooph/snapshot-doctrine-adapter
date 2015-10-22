@@ -16,7 +16,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 use Prooph\EventStore\Snapshot\Adapter\Doctrine\Schema\SnapshotStoreSchema;
 
 /**
- * Class EventStoreSchemaTest
+ * Class SnapshotStoreSchemaTest
  * @package ProophTest\EventStore\Snapshot\Adapter
  */
 final class SnapshotStoreSchemaTest extends TestCase
