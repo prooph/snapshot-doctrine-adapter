@@ -47,7 +47,7 @@ final class SnapshotStoreSchema
      * @param Schema $schema
      * @param string $snapshotName Defaults to 'snapshot'
      */
-    public static function dropStream(Schema $schema, $snapshotName = 'snapshot')
+    public static function drop(Schema $schema, $snapshotName = 'snapshot')
     {
         $schema->dropTable($snapshotName);
     }

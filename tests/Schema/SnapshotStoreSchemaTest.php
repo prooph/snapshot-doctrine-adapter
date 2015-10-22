@@ -19,7 +19,7 @@ use Prooph\EventStore\Snapshot\Adapter\Doctrine\Schema\SnapshotStoreSchema;
  * Class EventStoreSchemaTest
  * @package ProophTest\EventStore\Snapshot\Adapter
  */
-final class EventStoreSchemaTest extends TestCase
+final class SnapshotStoreSchemaTest extends TestCase
 {
     /**
      * @test
@@ -29,6 +29,6 @@ final class EventStoreSchemaTest extends TestCase
         $schema = $this->prophesize(Schema::class);
         $schema->dropTable('table_name');
 
-        SnapshotStoreSchema::dropStream($schema->reveal(), 'table_name');
+        SnapshotStoreSchema::drop($schema->reveal(), 'table_name');
     }
 }
