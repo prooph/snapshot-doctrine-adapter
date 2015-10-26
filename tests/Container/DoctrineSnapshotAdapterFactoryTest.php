@@ -31,8 +31,8 @@ final class DoctrineSnapshotAdapterFactoryTest extends TestCase
         $container = $this->prophesize(ContainerInterface::class);
         $container->get('config')->willReturn([
             'prooph' => [
-                'event_store' => [
-                    'snapshot_adapter' => [
+                'snapshot_store' => [
+                    'adapter' => [
                         'type' => DoctrineSnapshotAdapter::class,
                         'options' => [
                             'connection' => [
@@ -59,8 +59,8 @@ final class DoctrineSnapshotAdapterFactoryTest extends TestCase
         $container = $this->prophesize(ContainerInterface::class);
         $container->get('config')->willReturn([
             'prooph' => [
-                'event_store' => [
-                    'snapshot_adapter' => [
+                'snapshot_store' => [
+                    'adapter' => [
                         'type' => DoctrineSnapshotAdapter::class,
                         'options' => [
                             'connection_alias' => 'my_connection'
@@ -84,8 +84,8 @@ final class DoctrineSnapshotAdapterFactoryTest extends TestCase
         $container = $this->prophesize(ContainerInterface::class);
         $container->get('config')->willReturn([
             'prooph' => [
-                'event_store' => [
-                    'snapshot_adapter' => [
+                'snapshot_store' => [
+                    'adapter' => [
                         'type' => DoctrineSnapshotAdapter::class,
                         'options' => [
                             'connection' => [
@@ -115,8 +115,8 @@ final class DoctrineSnapshotAdapterFactoryTest extends TestCase
         $container = $this->prophesize(ContainerInterface::class);
         $container->get('config')->willReturn([
             'prooph' => [
-                'event_store' => [
-                    'snapshot_adapter' => [
+                'snapshot_store' => [
+                    'adapter' => [
                         'type' => DoctrineSnapshotAdapter::class,
                         'options' => [
                         ]
