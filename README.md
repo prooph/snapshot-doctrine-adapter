@@ -6,9 +6,15 @@ Doctrine Adapter for the Snapshot Store
 [![Coverage Status](https://coveralls.io/repos/prooph/snapshot-doctrine-adapter/badge.svg?branch=master&service=github)](https://coveralls.io/github/prooph/snapshot-doctrine-adapter?branch=master)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/prooph/improoph)
 
-# Set Up
+## Set Up
 
-How to use the adapter is explained in the [prooph/event-store  docs](https://github.com/prooph/event-store/blob/master/docs/snapshots.md). To help you with setting up the snapshot tables we ship a [SnapshotStoreSchema](src/Schema/SnapshotStoreSchema.php) helper with the package. You can use it in a doctrine migrations script or manually by passing in a `Doctrine\DBAL\Schema\Schema` and executing the generated SQL afterwards.
+How to use the adapter is explained in the [prooph/event-store docs](https://github.com/prooph/event-store/blob/master/docs/snapshots.md). To help you with setting up the snapshot tables we ship a [SnapshotStoreSchema](src/Schema/SnapshotStoreSchema.php) helper with the package. You can use it in a doctrine migrations script or manually by passing in a `Doctrine\DBAL\Schema\Schema` and executing the generated SQL afterwards.
+
+## Interop Factory
+
+Some general notes about how to use interop factories shipped with prooph components can be found in the [event store docs](https://github.com/prooph/event-store/blob/master/docs/interop_factories.md).
+Use the [doctrine snapshot adapter factory](src/Container/DoctrineSnapshotAdapterFactory.php) to set up the adapter. If your IoC container supports callable factories
+you can register the factory under a service id of your choice and configure this service id as `$config['prooph']['snapshot_store']['adpater']['type'] = <adapter_service_id>`.
 
 # Support
 

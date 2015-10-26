@@ -35,7 +35,7 @@ final class DoctrineSnapshotAdapterFactory implements RequiresConfig, RequiresMa
     public function __invoke(ContainerInterface $container)
     {
         $config = $container->get('config');
-        $config = $this->options($config)['snapshot_adapter']['options'];
+        $config = $this->options($config)['adapter']['options'];
 
         if (isset($config['connection_alias']) && $container->has($config['connection_alias'])) {
             $connection = $container->get($config['connection_alias']);
@@ -66,7 +66,7 @@ final class DoctrineSnapshotAdapterFactory implements RequiresConfig, RequiresMa
      */
     public function packageName()
     {
-        return 'event_store';
+        return 'snapshot_store';
     }
 
     /**
@@ -74,7 +74,7 @@ final class DoctrineSnapshotAdapterFactory implements RequiresConfig, RequiresMa
      */
     public function mandatoryOptions()
     {
-        return ['snapshot_adapter' => ['options']];
+        return ['adapter' => ['options']];
     }
 
     /**
@@ -82,6 +82,6 @@ final class DoctrineSnapshotAdapterFactory implements RequiresConfig, RequiresMa
      */
     public function defaultOptions()
     {
-        return ['snapshot_adapter' => ['options' => ['snapshot_table_map' => []]]];
+        return ['adapter' => ['options' => ['snapshot_table_map' => []]]];
     }
 }
