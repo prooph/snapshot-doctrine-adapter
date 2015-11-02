@@ -110,12 +110,18 @@ final class DoctrineSnapshotAdapter implements Adapter
             ]
         );
 
-        $this->connection->executeQuery(
-            'DELETE FROM ' . $table . ' WHERE '
-            . 'aggregate_type = "' . $snapshot->aggregateType()->toString() . '"'
-            . 'AND aggregate_id = "' . $snapshot->aggregateId() . '"'
-            . 'AND last_version < ' . $snapshot->lastVersion()
-        );
+        $queryBuilder = $this->connection->createQueryBuilder();
+        $table = $this->getTable($snapshot->aggregateType());
+        $queryBuilder
+            ->delete($table)
+            ->where('aggregate_type = :aggregate_type')
+            ->andWhere('aggregate_id = :aggregate_id')
+            ->andWhere('last_version < :last_version')
+            ->setParameter('aggregate_type', $snapshot->aggregateType()->toString())
+            ->setParameter('aggregate_id', $snapshot->aggregateId())
+            ->setParameter('last_version', $snapshot->lastVersion());
+
+        $queryBuilder->execute();
     }
 
     /**
