@@ -83,12 +83,12 @@ final class DoctrineSnapshotAdapter implements Adapter
     }
 
     /**
-     * Add a snapshot
+     * Save a snapshot
      *
      * @param Snapshot $snapshot
      * @return void
      */
-    public function add(Snapshot $snapshot)
+    public function save(Snapshot $snapshot)
     {
         $table = $this->getTable($snapshot->aggregateType());
 
@@ -109,6 +109,19 @@ final class DoctrineSnapshotAdapter implements Adapter
                 'blob',
             ]
         );
+
+        $queryBuilder = $this->connection->createQueryBuilder();
+        $table = $this->getTable($snapshot->aggregateType());
+        $queryBuilder
+            ->delete($table)
+            ->where('aggregate_type = :aggregate_type')
+            ->andWhere('aggregate_id = :aggregate_id')
+            ->andWhere('last_version < :last_version')
+            ->setParameter('aggregate_type', $snapshot->aggregateType()->toString())
+            ->setParameter('aggregate_id', $snapshot->aggregateId())
+            ->setParameter('last_version', $snapshot->lastVersion());
+
+        $queryBuilder->execute();
     }
 
     /**

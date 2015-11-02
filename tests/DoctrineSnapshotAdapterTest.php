@@ -49,7 +49,7 @@ final class DoctrineSnapshotAdapterTest extends TestCase
     /**
      * @test
      */
-    public function it_adds_and_reads()
+    public function it_saves_and_reads()
     {
         $schema = new Schema();
 
@@ -74,13 +74,22 @@ final class DoctrineSnapshotAdapterTest extends TestCase
 
         $snapshot = new Snapshot($aggregateType, 'id', $aggregateRoot, 1, $now);
 
-        $adapter->add($snapshot);
+        $adapter->save($snapshot);
+
+        $snapshot = new Snapshot($aggregateType, 'id', $aggregateRoot, 2, $now);
+
+        $adapter->save($snapshot);
 
         $this->assertNull($adapter->get($aggregateType, 'invalid'));
 
         $readSnapshot = $adapter->get($aggregateType, 'id');
 
         $this->assertEquals($snapshot, $readSnapshot);
+
+        $statement = $this->connection->prepare('SELECT * FROM foo_snapshot');
+        $statement->execute();
+        $snapshots = $statement->fetchAll();
+        $this->assertCount(1, $snapshots);
     }
 
     /**
@@ -111,7 +120,7 @@ final class DoctrineSnapshotAdapterTest extends TestCase
 
         $snapshot = new Snapshot($aggregateType, 'id', $aggregateRoot, 1, $now);
 
-        $adapter->add($snapshot);
+        $adapter->save($snapshot);
 
         $queryBuilder = $this->connection->createQueryBuilder();
         $queryBuilder
