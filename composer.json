@@ -1,7 +1,7 @@
 {
     "name": "prooph/snapshot-doctrine-adapter",
     "description": "Snapshot Doctrine Adapter for ProophEventStore",
-    "homepage": "https://github.com/prooph/snapshot-doctrine-adapter",
+    "homepage": "http://getprooph.org/",
     "license": "BSD-3-Clause",
     "authors": [
         {
