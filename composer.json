@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": ">=5.5",
+        "php": "~5.5|~7.0",
         "prooph/event-store": "dev-develop",
         "prooph/common": "^3.5",
         "doctrine/dbal": "^2.4"
