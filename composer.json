@@ -18,7 +18,7 @@
         "php": "~5.5|~7.0",
         "prooph/event-store": "dev-develop",
         "prooph/common": "^3.5",
-        "doctrine/dbal": "^2.4"
+        "doctrine/dbal": "^2.5"
     },
     "require-dev": {
         "container-interop/container-interop": "^1.1",
