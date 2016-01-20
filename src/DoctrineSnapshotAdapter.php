@@ -76,7 +76,7 @@ final class DoctrineSnapshotAdapter implements Adapter
         return new Snapshot(
             $aggregateType,
             $aggregateId,
-            unserialize($result['aggregate_root']),
+            $this->unserializeAggregateRoot($result['aggregate_root']),
             (int) $result['last_version'],
             \DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s.u', $result['created_at'], new \DateTimeZone('UTC'))
         );
@@ -151,5 +151,18 @@ final class DoctrineSnapshotAdapter implements Adapter
     {
         $streamName = str_replace('-', '_', $aggregateType->toString());
         return implode('', array_slice(explode('\\', $streamName), -1));
+    }
+
+    /**
+     * @param string|resource $serialized
+     * @return object
+     */
+    private function unserializeAggregateRoot($serialized)
+    {
+        if (is_resource($serialized)) {
+            $serialized = stream_get_contents($serialized);
+        }
+
+        return unserialize($serialized);
     }
 }
