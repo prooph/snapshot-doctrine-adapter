@@ -12,7 +12,9 @@
 namespace ProophTest\EventStore\Snapshot\Adapter\Doctrine;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit_Framework_TestCase as TestCase;
 use Prooph\EventStore\Aggregate\AggregateType;
@@ -131,5 +133,50 @@ final class DoctrineSnapshotAdapterTest extends TestCase
         $stmt = $queryBuilder->execute();
 
         $this->assertNotNull($stmt->fetch(\PDO::FETCH_ASSOC));
+    }
+
+    /**
+     * @test
+     */
+    public function it_deals_with_resources_on_serialized_aggregate_roots()
+    {
+        /** @var Connection|\PHPUnit_Framework_MockObject_MockObject $connection */
+        $connection = $this->getMockBuilder(Connection::class)->disableOriginalConstructor()->getMock();
+
+        /** @var QueryBuilder|\PHPUnit_Framework_MockObject_MockObject $queryBuilder */
+        $queryBuilder = $this->getMockBuilder(QueryBuilder::class)->disableOriginalConstructor()->getMock();
+
+        /** @var Statement|\PHPUnit_Framework_MockObject_MockObject $stmt */
+        $stmt = $this->getMockForAbstractClass(Statement::class);
+
+        $aggregateRoot = new \stdClass();
+        $aggregateRoot->data = 'AggregateRoot';
+
+        $resource = fopen('php://temp', 'r+');
+        fwrite($resource, serialize($aggregateRoot));
+        fseek($resource, 0);
+
+        $connection->expects($this->once())->method('createQueryBuilder')->willReturn($queryBuilder);
+
+        $queryBuilder->expects($this->once())->method('select')->willReturnSelf();
+        $queryBuilder->expects($this->once())->method('from')->willReturnSelf();
+        $queryBuilder->expects($this->any())->method('where')->willReturnSelf();
+        $queryBuilder->expects($this->any())->method('andWhere')->willReturnSelf();
+        $queryBuilder->expects($this->any())->method('orderBy')->willReturnSelf();
+        $queryBuilder->expects($this->any())->method('setParameter')->willReturnSelf();
+        $queryBuilder->expects($this->any())->method('setMaxResults')->willReturnSelf();
+        $queryBuilder->expects($this->once())->method('execute')->willReturn($stmt);
+
+        $stmt->expects($this->once())->method('fetch')->with(\PDO::FETCH_ASSOC)->willReturn([
+            'aggregate_root' => $resource,
+            'last_version'   => 3,
+            'created_at'     => '2016-01-21T09:33:00.000',
+        ]);
+
+        $adapter = new DoctrineSnapshotAdapter($connection, ['foo' => 'bar']);
+
+        $snapshot = $adapter->get(AggregateType::fromString('foo'), 'some-uuid-non-important-here');
+
+        $this->assertEquals('AggregateRoot', $snapshot->aggregateRoot()->data);
     }
 }
