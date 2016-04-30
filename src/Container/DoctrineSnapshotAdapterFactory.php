@@ -56,17 +56,9 @@ final class DoctrineSnapshotAdapterFactory implements RequiresConfig, RequiresMa
     /**
      * @inheritdoc
      */
-    public function vendorName()
+    public function dimensions()
     {
-        return 'prooph';
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function packageName()
-    {
-        return 'snapshot_store';
+        return ['prooph', 'snapshot_store'];
     }
 
     /**
