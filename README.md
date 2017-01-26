@@ -14,7 +14,7 @@ How to use the adapter is explained in the [prooph/event-store docs](https://git
 
 Some general notes about how to use interop factories shipped with prooph components can be found in the [event store docs](https://github.com/prooph/event-store/blob/master/docs/interop_factories.md).
 Use the [doctrine snapshot adapter factory](src/Container/DoctrineSnapshotAdapterFactory.php) to set up the adapter. If your IoC container supports callable factories
-you can register the factory under a service id of your choice and configure this service id as `$config['prooph']['snapshot_store']['adpater']['type'] = <adapter_service_id>`.
+you can register the factory under a service id of your choice and configure this service id as `$config['prooph']['snapshot_store']['adapter']['type'] = <adapter_service_id>`.
 
 # Support
 
