@@ -2,6 +2,8 @@
 
 Doctrine Adapter for the Snapshot Store
 
+#CAUTION: Support for the package will end at 31 December 2017. Use https://github.com/prooph/pdo-snapshot-store instead!
+
 [![Build Status](https://travis-ci.org/prooph/snapshot-doctrine-adapter.svg?branch=master)](https://travis-ci.org/prooph/snapshot-doctrine-adapter)
 [![Coverage Status](https://coveralls.io/repos/prooph/snapshot-doctrine-adapter/badge.svg?branch=master&service=github)](https://coveralls.io/github/prooph/snapshot-doctrine-adapter?branch=master)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/prooph/improoph)
